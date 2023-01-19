@@ -1,21 +1,23 @@
-import pygame
-pygame.mixer.init()
-import random
-from settings import *
-from player import *
-
-# Import pygame.locals for easier access to key coordinates
-# Updated to conform to flake8 and black standards
-# from pygame.locals import *
 from pygame.locals import (
     RLEACCEL,
     K_ESCAPE,
     KEYDOWN,
     QUIT,
 )
+from player import *
+from settings import *
+import random
+import pygame
+pygame.mixer.init()
+
+# Import pygame.locals for easier access to key coordinates
+# Updated to conform to flake8 and black standards
+# from pygame.locals import *
 
 # Define the enemy object extending pygame.sprite.Sprite
 # Instead of a surface, we use an image for a better looking sprite
+
+
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super(Enemy, self).__init__()
@@ -59,6 +61,7 @@ class Cloud(pygame.sprite.Sprite):
         self.rect.move_ip(-5, 0)
         if self.rect.right < 0:
             self.kill()
+
 
 # Initialize pygame
 pygame.init()

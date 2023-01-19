@@ -105,7 +105,8 @@ class Player(pygame.sprite.Sprite):
         image = pygame.transform.rotate(self.image, self.rotation)
         self.surf = image.convert_alpha()
         rotors = rotors_image.convert_alpha()
-        rotor_rect = rotors.get_rect(center = (self.surf.get_width()/2,self.surf.get_height()/2))
+        rotor_rect = rotors.get_rect(
+            center=(self.surf.get_width()/2, self.surf.get_height()/2))
         self.surf.blit(rotors, rotor_rect)
         self.rect = self.surf.get_rect(center=center)
 
