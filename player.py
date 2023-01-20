@@ -23,17 +23,13 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect()
         self.move_x = 0
         self.move_y = 0
-        self.next_rotation = 0
-        self.rotation = 0
-        self.last_rotation_time = 0
-        self.rotation_scheduled = False
+        self.rotation = 0        
         self.rotor_rotation = 0
 
     def update(self, pressed_keys):
         self.accelerate(pressed_keys)
-        self.schedule_rotation(pressed_keys)
+        self.rotate(pressed_keys)
         self.move()
-        self.rotate()
         self.redraw()
         self.deccelarate()
 
@@ -52,22 +48,11 @@ class Player(pygame.sprite.Sprite):
             self.move_x = MAX_SPEED * (self.move_x / self.total_speed)
             self.move_y = MAX_SPEED * (self.move_y / self.total_speed)
 
-    def schedule_rotation(self, pressed_keys):
-        if self.rotation_scheduled:
-            return
+    def rotate(self, pressed_keys):
         if pressed_keys[K_PAGEDOWN]:
-            self.rotation_scheduled = True
-            self.next_rotation = self.rotation - 45
+            self.rotation = self.rotation - 5
         if pressed_keys[K_PAGEUP]:
-            self.rotation_scheduled = True
-            self.next_rotation = self.rotation + 45
-
-    def rotate(self):
-        can_do_another = pygame.time.get_ticks() - self.last_rotation_time >= ROTATION_TIMEOUT
-        if (self.rotation_scheduled and can_do_another):
-            self.rotation = self.next_rotation
-            self.last_rotation_time = pygame.time.get_ticks()
-            self.rotation_scheduled = False
+            self.rotation = self.rotation + 5
 
     def move(self):
         if self.move_x != 0 and self.move_y != 0:
