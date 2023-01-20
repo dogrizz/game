@@ -15,11 +15,11 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
         rotor = pygame.image.load("rotors.png")
-        self.rotors_image = pygame.transform.scale(rotor, HELI_SIZE)
+        self.rotors_image = pygame.transform.scale(rotor, HELI_SIZE).convert_alpha()
         image = pygame.image.load("heli.png")
         self.image = pygame.transform.scale(image, HELI_SIZE)
         self.surf = self.image.convert_alpha()
-        self.surf.blit(self.rotors_image.convert_alpha(), (0, 0))
+        self.surf.blit(self.rotors_image, (0, 0))
         self.rect = self.surf.get_rect()
         self.move_x = 0
         self.move_y = 0
@@ -89,7 +89,7 @@ class Player(pygame.sprite.Sprite):
         center = self.rect.center
         image = pygame.transform.rotate(self.image, self.rotation)
         self.surf = image.convert_alpha()
-        rotors = rotors_image.convert_alpha()
+        rotors = rotors_image
         rotor_rect = rotors.get_rect(
             center=(self.surf.get_width()/2, self.surf.get_height()/2))
         self.surf.blit(rotors, rotor_rect)

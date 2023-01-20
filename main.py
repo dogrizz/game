@@ -73,12 +73,6 @@ clock = pygame.time.Clock()
 # The size is determined by the constant SCREEN_WIDTH and SCREEN_HEIGHT
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-# Create custom events for adding a new enemy and cloud
-ADDENEMY = pygame.USEREVENT + 1
-#pygame.time.set_timer(ADDENEMY, 250)
-ADDCLOUD = pygame.USEREVENT + 2
-pygame.time.set_timer(ADDCLOUD, 1000)
-
 # Create our 'player'
 player = Player()
 
@@ -91,12 +85,6 @@ clouds = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 
-# Load and play our background music
-# Sound source: http://ccmixter.org/files/Apoxode/59262
-# License: https://creativecommons.org/licenses/by/3.0/
-# pygame.mixer.music.load("Apoxode_-_Electric_1.mp3")
-# pygame.mixer.music.play(loops=-1)
-
 collision_sound = pygame.mixer.Sound("Collision.ogg")
 
 # Set the base volume for all sounds
@@ -104,6 +92,10 @@ collision_sound.set_volume(0.5)
 
 # Variable to keep our main loop running
 running = True
+
+
+dirt = pygame.image.load("dirt.jpg")
+dirt = pygame.transform.scale(dirt, (TILE_SIZE, TILE_SIZE)).convert()
 
 # Our main loop
 while running:
@@ -119,20 +111,6 @@ while running:
         elif event.type == QUIT:
             running = False
 
-        # Should we add a new enemy?
-        elif event.type == ADDENEMY:
-            # Create the new enemy, and add it to our sprite groups
-            new_enemy = Enemy()
-            enemies.add(new_enemy)
-            all_sprites.add(new_enemy)
-
-        # Should we add a new cloud?
-        elif event.type == ADDCLOUD:
-            # Create the new cloud, and add it to our sprite groups
-            new_cloud = Cloud()
-            clouds.add(new_cloud)
-            all_sprites.add(new_cloud)
-
     # Get the set of keys pressed and check for user input
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys)
@@ -140,8 +118,10 @@ while running:
     enemies.update()
     clouds.update()
 
-    # Fill the screen with sky blue
-    screen.fill((135, 206, 250))
+    for x in range(0, 15):
+        for y in range(0, 20):
+            screen.blit(dirt, (x*TILE_SIZE, y*TILE_SIZE))
+
 
     # Draw all our sprites
     for entity in all_sprites:
