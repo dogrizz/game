@@ -15,7 +15,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
         rotor = pygame.image.load("rotors.png")
-        self.rotors_image = pygame.transform.scale(rotor, HELI_SIZE).convert_alpha()
+        self.rotors_image = pygame.transform.scale(
+            rotor, HELI_SIZE).convert_alpha()
         image = pygame.image.load("heli.png")
         self.image = pygame.transform.scale(image, HELI_SIZE)
         self.surf = self.image.convert_alpha()
@@ -23,13 +24,14 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect()
         self.move_x = 0
         self.move_y = 0
-        self.rotation = 0        
+        self.realpos = [self.rect.centerx, self.rect.centery]
+        self.rotation = 0
         self.rotor_rotation = 0
 
-    def update(self, pressed_keys):
+    def update(self, pressed_keys, map_size, scroll):
         self.accelerate(pressed_keys)
         self.rotate(pressed_keys)
-        self.move()
+        self.move(map_size, scroll)
         self.redraw()
         self.deccelarate()
 
@@ -50,7 +52,7 @@ class Player(pygame.sprite.Sprite):
 
     def rotate(self, pressed_keys):
         if pressed_keys[K_PAGEDOWN]:
-            self.rotation = self.rotation - 5 
+            self.rotation = self.rotation - 5
 
     def rotate(self, pressed_keys):
         if pressed_keys[K_PAGEDOWN]:
@@ -58,12 +60,26 @@ class Player(pygame.sprite.Sprite):
         if pressed_keys[K_PAGEUP]:
             self.rotation = self.rotation + 5
 
-    def move(self):
+    def move(self, map_size, scroll):
+        delta = [0, 0]
         if self.move_x != 0 and self.move_y != 0:
-            self.rect.move_ip(self.move_x/1.444, self.move_y/1.444)
+            delta[0] = self.move_x/1.444
+            delta[1] = self.move_y/1.444
         else:
-            self.rect.move_ip(self.move_x, self.move_y)
+            delta[0] = self.move_x
+            delta[1] = self.move_y
+
+        self.rect.move_ip(delta[0],
+                          delta[1])
+
+        self.realpos[0] += delta[0]
+        self.realpos[1] += delta[1]
+
         # Keep player on the screen
+        if (scroll[0] > 0 and scroll[0] + SCREEN_WIDTH < map_size[0]):
+            self.rect.centerx = SCREEN_WIDTH/2
+        if (scroll[1] > 0 and scroll[1] + SCREEN_HEIGHT < map_size[1]):
+            self.rect.centery = SCREEN_HEIGHT/2
         if self.rect.left < 0:
             self.rect.left = 0
         elif self.rect.right > SCREEN_WIDTH:
@@ -72,6 +88,17 @@ class Player(pygame.sprite.Sprite):
             self.rect.top = 0
         elif self.rect.bottom >= SCREEN_HEIGHT:
             self.rect.bottom = SCREEN_HEIGHT
+
+        if self.realpos[0] < 0:
+            self.realpos[0] = 0
+        if self.realpos[1] < 0:
+            self.realpos[1] = 0
+        if (self.realpos[0] > map_size[0] - HELI_SIZE[0]):
+            self.realpos[0] = map_size[0] - HELI_SIZE[0]
+        elif (self.realpos[1] > map_size[1]-HELI_SIZE[1]):
+            self.realpos[1] = map_size[1]-HELI_SIZE[1]
+
+        print(delta, self.rect, scroll, self.realpos)
 
     def deccel(self, val):
         if val == 0 or abs(val) < 0.5:

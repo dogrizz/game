@@ -17,6 +17,8 @@ pygame.mixer.init()
 # Define the enemy object extending pygame.sprite.Sprite
 # Instead of a surface, we use an image for a better looking sprite
 
+scroll = [0, 0]
+
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
@@ -63,6 +65,24 @@ class Cloud(pygame.sprite.Sprite):
             self.kill()
 
 
+def determine_scroll(old_scroll, player, map_size):
+    scroll = old_scroll
+    x = player.realpos[0] - SCREEN_WIDTH / 2
+    y = player.realpos[1] - SCREEN_HEIGHT / 2
+    scroll[0] = x
+    scroll[1] = y
+    if scroll[0] < 0:
+        scroll[0] = 0
+    if scroll[1] < 0:
+        scroll[1] = 0
+    if scroll[0] > map_size[0] - SCREEN_WIDTH:
+        scroll[0] = map_size[0] - SCREEN_WIDTH
+    if scroll[1] > map_size[1]-SCREEN_HEIGHT:
+        scroll[1] = map_size[1] - SCREEN_HEIGHT
+
+    return scroll
+
+
 # Initialize pygame
 pygame.init()
 
@@ -97,8 +117,13 @@ dirt = pygame.image.load("dirt.jpg")
 dirt = pygame.transform.scale(dirt, (TILE_SIZE, TILE_SIZE)).convert()
 
 pygame.mouse.set_visible(False)
-crosshair = pygame.transform.scale(pygame.image.load(
-    "crosshair.png"), (CROSSHAIR_SIZE, CROSSHAIR_SIZE)).convert_alpha()
+crosshair = pygame.transform.scale(
+    pygame.image.load("crosshair.png"),
+    (CROSSHAIR_SIZE, CROSSHAIR_SIZE)
+).convert_alpha()
+
+tiles_dimensions = (30, 40)
+map_size = (tiles_dimensions[0] * TILE_SIZE, tiles_dimensions[1] * TILE_SIZE)
 
 # Our main loop
 while running:
@@ -116,14 +141,19 @@ while running:
 
     # Get the set of keys pressed and check for user input
     pressed_keys = pygame.key.get_pressed()
-    player.update(pressed_keys)
+    player.update(pressed_keys, map_size, scroll)
+    scroll = determine_scroll(scroll, player, map_size)
+
     # Update the position of our enemies and clouds
     enemies.update()
     clouds.update()
 
-    for x in range(0, 15):
-        for y in range(0, 20):
-            screen.blit(dirt, (x*TILE_SIZE, y*TILE_SIZE))
+    for x in range(0, tiles_dimensions[0]):
+        for y in range(0, tiles_dimensions[1]):
+            screen.blit(
+                dirt, 
+                (x*TILE_SIZE - scroll[0], y*TILE_SIZE - scroll[1])
+            )
 
     # Draw crosshair
     crosshair_pos = pygame.mouse.get_pos()
