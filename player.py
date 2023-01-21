@@ -14,10 +14,10 @@ from pygame.locals import (
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        rotor = pygame.image.load("rotors.png")
+        rotor = pygame.image.load("resources/rotors.png")
         self.rotors_image = pygame.transform.scale(
             rotor, HELI_SIZE).convert_alpha()
-        image = pygame.image.load("heli.png")
+        image = pygame.image.load("resources/heli.png")
         self.image = pygame.transform.scale(image, HELI_SIZE)
         self.surf = self.image.convert_alpha()
         self.surf.blit(self.rotors_image, (0, 0))

@@ -23,7 +23,7 @@ scroll = [0, 0]
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super(Enemy, self).__init__()
-        self.surf = pygame.image.load("missile.png").convert()
+        self.surf = pygame.image.load("resources/missile.png").convert()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         # The starting position is randomly generated, as is the speed
         self.rect = self.surf.get_rect(
@@ -47,7 +47,7 @@ class Enemy(pygame.sprite.Sprite):
 class Cloud(pygame.sprite.Sprite):
     def __init__(self):
         super(Cloud, self).__init__()
-        self.surf = pygame.image.load("cloud.png").convert()
+        self.surf = pygame.image.load("resources/cloud.png").convert()
         self.surf.set_colorkey((0, 0, 0), RLEACCEL)
         # The starting position is randomly generated
         self.rect = self.surf.get_rect(
@@ -105,7 +105,7 @@ clouds = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 
-collision_sound = pygame.mixer.Sound("Collision.ogg")
+collision_sound = pygame.mixer.Sound("resources/Collision.ogg")
 
 # Set the base volume for all sounds
 collision_sound.set_volume(0.5)
@@ -113,12 +113,12 @@ collision_sound.set_volume(0.5)
 # Variable to keep our main loop running
 running = True
 
-dirt = pygame.image.load("dirt.jpg")
+dirt = pygame.image.load("resources/dirt.jpg")
 dirt = pygame.transform.scale(dirt, (TILE_SIZE, TILE_SIZE)).convert()
 
 pygame.mouse.set_visible(False)
 crosshair = pygame.transform.scale(
-    pygame.image.load("crosshair.png"),
+    pygame.image.load("resources/crosshair.png"),
     (CROSSHAIR_SIZE, CROSSHAIR_SIZE)
 ).convert_alpha()
 
