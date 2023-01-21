@@ -75,11 +75,14 @@ class Player(pygame.sprite.Sprite):
         self.realpos[0] += delta[0]
         self.realpos[1] += delta[1]
 
-        # Keep player on the screen
+        # TODO it snaps hard, investigate
+        # keep player in center when screen starts scrolling
         if (scroll[0] > 0 and scroll[0] + SCREEN_WIDTH < map_size[0]):
             self.rect.centerx = SCREEN_WIDTH/2
         if (scroll[1] > 0 and scroll[1] + SCREEN_HEIGHT < map_size[1]):
             self.rect.centery = SCREEN_HEIGHT/2
+
+        # keep player on screen
         if self.rect.left < 0:
             self.rect.left = 0
         elif self.rect.right > SCREEN_WIDTH:
@@ -89,6 +92,7 @@ class Player(pygame.sprite.Sprite):
         elif self.rect.bottom >= SCREEN_HEIGHT:
             self.rect.bottom = SCREEN_HEIGHT
 
+        # keep player on map
         if self.realpos[0] < 0:
             self.realpos[0] = 0
         if self.realpos[1] < 0:
@@ -97,8 +101,6 @@ class Player(pygame.sprite.Sprite):
             self.realpos[0] = map_size[0] - HELI_SIZE[0]
         elif (self.realpos[1] > map_size[1]-HELI_SIZE[1]):
             self.realpos[1] = map_size[1]-HELI_SIZE[1]
-
-        print(delta, self.rect, scroll, self.realpos)
 
     def deccel(self, val):
         if val == 0 or abs(val) < 0.5:
