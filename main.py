@@ -93,9 +93,12 @@ collision_sound.set_volume(0.5)
 # Variable to keep our main loop running
 running = True
 
-
 dirt = pygame.image.load("dirt.jpg")
 dirt = pygame.transform.scale(dirt, (TILE_SIZE, TILE_SIZE)).convert()
+
+pygame.mouse.set_visible(False)
+crosshair = pygame.transform.scale(pygame.image.load(
+    "crosshair.png"), (CROSSHAIR_SIZE, CROSSHAIR_SIZE)).convert_alpha()
 
 # Our main loop
 while running:
@@ -122,6 +125,9 @@ while running:
         for y in range(0, 20):
             screen.blit(dirt, (x*TILE_SIZE, y*TILE_SIZE))
 
+    # Draw crosshair
+    crosshair_pos = pygame.mouse.get_pos()
+    screen.blit(crosshair, crosshair.get_rect(center=crosshair_pos))
 
     # Draw all our sprites
     for entity in all_sprites:

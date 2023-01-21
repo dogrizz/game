@@ -50,6 +50,10 @@ class Player(pygame.sprite.Sprite):
 
     def rotate(self, pressed_keys):
         if pressed_keys[K_PAGEDOWN]:
+            self.rotation = self.rotation - 5 
+
+    def rotate(self, pressed_keys):
+        if pressed_keys[K_PAGEDOWN]:
             self.rotation = self.rotation - 5
         if pressed_keys[K_PAGEUP]:
             self.rotation = self.rotation + 5
