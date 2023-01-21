@@ -8,6 +8,7 @@ from player import *
 from settings import *
 import random
 import pygame
+from map import Map
 pygame.mixer.init()
 
 # Import pygame.locals for easier access to key coordinates
@@ -113,17 +114,13 @@ collision_sound.set_volume(0.5)
 # Variable to keep our main loop running
 running = True
 
-dirt = pygame.image.load("resources/dirt.jpg")
-dirt = pygame.transform.scale(dirt, (TILE_SIZE, TILE_SIZE)).convert()
-
 pygame.mouse.set_visible(False)
 crosshair = pygame.transform.scale(
     pygame.image.load("resources/crosshair.png"),
     (CROSSHAIR_SIZE, CROSSHAIR_SIZE)
 ).convert_alpha()
 
-tiles_dimensions = (30, 40)
-map_size = (tiles_dimensions[0] * TILE_SIZE, tiles_dimensions[1] * TILE_SIZE)
+map = Map()
 
 # Our main loop
 while running:
@@ -141,19 +138,14 @@ while running:
 
     # Get the set of keys pressed and check for user input
     pressed_keys = pygame.key.get_pressed()
-    player.update(pressed_keys, map_size, scroll)
-    scroll = determine_scroll(scroll, player, map_size)
+    player.update(pressed_keys, map.size, scroll)
+    scroll = determine_scroll(scroll, player, map.size)
 
     # Update the position of our enemies and clouds
     enemies.update()
     clouds.update()
 
-    for x in range(0, tiles_dimensions[0]):
-        for y in range(0, tiles_dimensions[1]):
-            screen.blit(
-                dirt, 
-                (x*TILE_SIZE - scroll[0], y*TILE_SIZE - scroll[1])
-            )
+    map.drawOn(screen, scroll)
 
     # Draw crosshair
     crosshair_pos = pygame.mouse.get_pos()
