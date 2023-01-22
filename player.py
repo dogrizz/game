@@ -13,7 +13,7 @@ from pygame.locals import (
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, spawnpoint):
         super(Player, self).__init__()
         rotor = pygame.image.load("resources/rotors.png")
         self.rotors_image = pygame.transform.scale(
@@ -23,9 +23,11 @@ class Player(pygame.sprite.Sprite):
         self.surf = self.image.convert_alpha()
         self.surf.blit(self.rotors_image, (0, 0))
         self.rect = self.surf.get_rect()
+        self.rect.centerx = spawnpoint[0]
+        self.rect.centery = spawnpoint[1]
         self.move_x = 0
         self.move_y = 0
-        self.realpos = [HELI_SIZE[0]/2, HELI_SIZE[1]/2]
+        self.realpos = [self.rect.centerx, self.rect.centery]
         self.rotation = 0
         self.rotor_rotation = 0
 
