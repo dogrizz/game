@@ -68,11 +68,13 @@ class Player(pygame.sprite.Sprite):
         self.realpos[0] = self.realpos[0] + math.floor(delta[0])
         self.realpos[1] = self.realpos[1] + math.floor(delta[1])
 
-        if self.realpos[0] > SCREEN_WIDTH/2 or self.realpos[0] < self.realpos[0] - SCREEN_WIDTH/2:
+    
+        if self.realpos[0] > H_SCREEN_WIDTH or self.realpos[0] < self.realpos[0] - H_SCREEN_WIDTH:
             self.rect.centerx = self.realpos[0] - scroll[0]
         else:
             self.realpos[0] = self.rect.centerx
-        if self.realpos[1] > SCREEN_HEIGHT/2 or self.realpos[1] < self.realpos[1] - SCREEN_HEIGHT/2:
+        
+        if self.realpos[1] > H_SCREEN_HEIGHT or self.realpos[1] < self.realpos[1] - H_SCREEN_HEIGHT:
             self.rect.centery = self.realpos[1] - scroll[1]
         else:
             self.realpos[1] = self.rect.centery
@@ -88,14 +90,14 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom = SCREEN_HEIGHT
 
         # keep player on map
-        if self.realpos[0] < HELI_SIZE[0]/2:
-            self.realpos[0] = HELI_SIZE[0]/2
-        if self.realpos[1] < HELI_SIZE[1]/2:
-            self.realpos[1] = HELI_SIZE[1]/2
-        if (self.realpos[0] > map_size[0] - HELI_SIZE[0]/2):
-            self.realpos[0] = map_size[0] - HELI_SIZE[0]/2
-        elif (self.realpos[1] > map_size[1] - HELI_SIZE[1]/2):
-            self.realpos[1] = map_size[1] - HELI_SIZE[1]/2
+        if self.realpos[0] < H_HELI_SIZE[0]:
+            self.realpos[0] = H_HELI_SIZE[0]
+        if self.realpos[1] < H_HELI_SIZE[1]:
+            self.realpos[1] = H_HELI_SIZE[1]
+        if self.realpos[0] > map_size[0] - H_HELI_SIZE[0]:
+            self.realpos[0] = map_size[0] - H_HELI_SIZE[0]
+        elif (self.realpos[1] > map_size[1] - H_HELI_SIZE[1]):
+            self.realpos[1] = map_size[1] - H_HELI_SIZE[1]
 
     def deccel(self, val):
         if val == 0 or abs(val) < 0.5:

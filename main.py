@@ -12,8 +12,8 @@ from map import Map
 
 def determine_scroll(old_scroll, player, map_size):
     scroll = old_scroll
-    x = player.realpos[0] - SCREEN_WIDTH / 2
-    y = player.realpos[1] - SCREEN_HEIGHT / 2
+    x = player.realpos[0] - H_SCREEN_WIDTH
+    y = player.realpos[1] - H_SCREEN_HEIGHT
     scroll[0] = x
     scroll[1] = y
     if scroll[0] < 0:
