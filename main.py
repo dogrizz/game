@@ -32,7 +32,7 @@ scroll = [0, 0]
 pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-player = Player((260,160))
+player = Player((2600,1600))
 enemies = pygame.sprite.Group()
 clouds = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
