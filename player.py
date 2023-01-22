@@ -1,4 +1,5 @@
 import pygame
+import math
 from settings import *
 
 from pygame.locals import (
@@ -24,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect()
         self.move_x = 0
         self.move_y = 0
-        self.realpos = [self.rect.centerx, self.rect.centery]
+        self.realpos = [HELI_SIZE[0]/2, HELI_SIZE[1]/2]
         self.rotation = 0
         self.rotor_rotation = 0
 
@@ -58,45 +59,42 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, map_size, scroll):
         delta = [0, 0]
-        if self.move_x != 0 and self.move_y != 0:
-            delta[0] = self.move_x/1.444
-            delta[1] = self.move_y/1.444
-        else:
-            delta[0] = self.move_x
-            delta[1] = self.move_y
+        delta[0] = self.move_x
+        delta[1] = self.move_y
+        
+        if delta[0] != 0 or delta[1] != 0:
+            self.rect.move_ip(delta[0], delta[1])
+            self.realpos[0] = self.realpos[0] + math.floor(delta[0])
+            self.realpos[1] = self.realpos[1] + math.floor(delta[1])
 
-        self.rect.move_ip(delta[0],
-                          delta[1])
+            if self.realpos[0] > SCREEN_WIDTH/2 or self.realpos[0] < self.realpos[0] - SCREEN_WIDTH/2:
+                self.rect.centerx = self.realpos[0] - scroll[0]
+            else:
+                self.realpos[0] = self.rect.centerx
+            if self.realpos[1] > SCREEN_HEIGHT/2 or self.realpos[1] < self.realpos[1] - SCREEN_HEIGHT/2:
+                self.rect.centery = self.realpos[1] - scroll[1]
+            else:
+                self.realpos[1] = self.rect.centery
 
-        self.realpos[0] += delta[0]
-        self.realpos[1] += delta[1]
+            # keep player on screen
+            if self.rect.left < 0:
+                self.rect.left = 0
+            elif self.rect.right > SCREEN_WIDTH:
+                self.rect.right = SCREEN_WIDTH
+            if self.rect.top <= 0:
+                self.rect.top = 0
+            elif self.rect.bottom >= SCREEN_HEIGHT:
+                self.rect.bottom = SCREEN_HEIGHT
 
-        # TODO it snaps hard, investigate
-        # keep player in center when screen starts scrolling
-        if (scroll[0] > 0 and scroll[0] + SCREEN_WIDTH < map_size[0]):
-            self.rect.centerx = SCREEN_WIDTH/2
-        if (scroll[1] > 0 and scroll[1] + SCREEN_HEIGHT < map_size[1]):
-            self.rect.centery = SCREEN_HEIGHT/2
-
-        # keep player on screen
-        if self.rect.left < 0:
-            self.rect.left = 0
-        elif self.rect.right > SCREEN_WIDTH:
-            self.rect.right = SCREEN_WIDTH
-        if self.rect.top <= 0:
-            self.rect.top = 0
-        elif self.rect.bottom >= SCREEN_HEIGHT:
-            self.rect.bottom = SCREEN_HEIGHT
-
-        # keep player on map
-        if self.realpos[0] < 0:
-            self.realpos[0] = 0
-        if self.realpos[1] < 0:
-            self.realpos[1] = 0
-        if (self.realpos[0] > map_size[0] - HELI_SIZE[0]):
-            self.realpos[0] = map_size[0] - HELI_SIZE[0]
-        elif (self.realpos[1] > map_size[1]-HELI_SIZE[1]):
-            self.realpos[1] = map_size[1]-HELI_SIZE[1]
+            # keep player on map
+            if self.realpos[0] < HELI_SIZE[0]/2:
+                self.realpos[0] = HELI_SIZE[0]/2
+            if self.realpos[1] < HELI_SIZE[1]/2:
+                self.realpos[1] = HELI_SIZE[1]/2
+            if (self.realpos[0] > map_size[0] - HELI_SIZE[0]/2):
+                self.realpos[0] = map_size[0] - HELI_SIZE[0]/2
+            elif (self.realpos[1] > map_size[1] - HELI_SIZE[1]/2):
+                self.realpos[1] = map_size[1] - HELI_SIZE[1]/2
 
     def deccel(self, val):
         if val == 0 or abs(val) < 0.5:
